@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Improves the block form when adding inline blocks.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function layout_builder_additions_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  if ($form_id == 'layout_builder_add_block' || $form_id == 'layout_builder_update_block') {
+    if (!empty($form['settings']['admin_label'])) {
+      $form['settings']['admin_label']['#access'] = FALSE;
+    }
+
+    // Only operate on certain block types.
+    if (empty($form['settings']['block_form']['#block'])) {
+      return;
+    }
+    if ($form['settings']['block_form']['#block']->bundle() == 'media') {
+      // Move the label field to the top of the form.
+      if (!empty($form['settings']['label'])) {
+        $form['settings']['label']['#weight'] = -10;
+      }
+      // Move the viewmode selector to the top of the form, and change its label
+      // to be more user friendly.
+      if (!empty($form['settings']['view_mode'])) {
+        $form['settings']['view_mode']['#weight'] = -9;
+        $form['settings']['view_mode']['#title'] = t('Image size');
+      }
+    }
+  }
+}
