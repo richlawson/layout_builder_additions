@@ -3,11 +3,13 @@
 namespace Drupal\layout_builder_additions;
 
 use Drupal\layout_builder\SectionStorageInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Simple class to set the title on Layout Builder block forms.
  */
 class LayoutBuilderBlockFormTitle {
+  use StringTranslationTrait;
 
   /**
    * Set the title for a Layout Builder Add Block form.
@@ -33,7 +35,7 @@ class LayoutBuilderBlockFormTitle {
     }
 
     // Default to just showing the default string.
-    return t('Configure block');
+    return $this->t('Configure block');
   }
 
   /**
@@ -66,7 +68,7 @@ class LayoutBuilderBlockFormTitle {
     }
 
     // Default to just showing the default string.
-    return t('Configure block');
+    return $this->t('Configure block');
   }
 
   /**
@@ -92,7 +94,7 @@ class LayoutBuilderBlockFormTitle {
         $label = $bundle_entity->label();
       }
 
-      return t('Configure block: %label', ['%label' => $label]);
+      return $this->t('Configure block: %label', ['%label' => $label]);
     }
   }
 
