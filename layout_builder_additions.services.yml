@@ -1,0 +1,8 @@
+# @file
+# Services definitions for the Layout Builder Additions module.
+
+services:
+  layout_builder_additions.route_subscriber:
+    class: Drupal\layout_builder_additions\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
