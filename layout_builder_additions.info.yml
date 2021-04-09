@@ -1,6 +1,6 @@
 name: Layout Builder Additions
 type: module
-description: 'Additions for the core Layout Builder module that improves the UI and experience.'
+description: 'Provides additions for the core Layout Builder module that improves the UI and experience.'
 package: Layout Builder
 core_version_requirement: ^8.7.7 || ^9
 dependencies:
