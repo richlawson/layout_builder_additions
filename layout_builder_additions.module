@@ -2,9 +2,11 @@
 
 /**
  * @file
- * Improves the block form when adding inline blocks.
+ * The Layout Builder Additions module provides addditions for the core
+ * Layout Builder module that improves the UI and experience.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -33,4 +35,26 @@ function layout_builder_additions_form_alter(&$form, FormStateInterface &$form_s
       }
     }
   }
+}
+
+/**
+ * Implements hook_help().
+ */
+function layout_builder_additions_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.layout_builder_additions':
+      $text = file_get_contents(__DIR__ . '/README.md');
+      if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
+        return '<pre>' . Html::escape($text) . '</pre>';
+      }
+      else {
+        // Use the Markdown filter to render the README.
+        $filter_manager = \Drupal::service('plugin.manager.filter');
+        $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        $config = ['settings' => $settings];
+        $filter = $filter_manager->createInstance('markdown', $config);
+        return $filter->process($text, 'en');
+      }
+  }
+  return NULL;
 }
