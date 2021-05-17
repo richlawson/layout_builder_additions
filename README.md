@@ -1,26 +1,19 @@
-# Layout Builder Additions
+CONTENTS OF THIS FILE
+---------------------
 
-Provides additions for the core Layout Builder module that improves the UI and
-experience.
+ * Introduction
+ * Requirements
+ * Installation
+ * Configuration
+ * Maintainers
+ * Contact Information
 
-## Installation
+INTRODUCTION
+------------
 
-There are no special installation instructions. Follow Drupal's standard
-instructions for [installing modules](https://www.drupal.org/docs/extending-drupal/installing-modules).
-
-### Composer
-
-If your site is [managed via Composer](https://www.drupal.org/node/2718229), use
-Composer to download the module:
-
-   ```sh
-   composer require "drupal/layout_builder_additions 1.0.x-dev"
-   ```
-
-Use ```composer update drupal/layout_builder_additions --with-dependencies```
-to update to a new release.
-
-## Features
+The Layout Builder Additions module provides additions for the core Layout 
+Builder module that improves the UI and experience. This module is currently 
+available for Drupal 8.7.7+ and 9.x.x.
 
 The primary features include:
 
@@ -36,19 +29,60 @@ blocks.
   This module will work with both the core Layout Builder interface, as well as
   with the recommended Layout Builder Modal module (see below).
 
-## Recommended Modules
+
+REQUIREMENTS
+------------
+
+This module requires the Layout Builder module in Drupal core.
+
+
+INSTALLATION
+------------
+
+Install the Layout Builder Additions module as you would normally install a 
+contributed Drupal module. Follow Drupal's standard instructions for 
+[installing modules](https://www.drupal.org/docs/extending-drupal/installing-modules).
+
+If your site is [managed via Composer](https://www.drupal.org/node/2718229), use
+Composer to download the module:
+
+   ```sh
+   composer require "drupal/layout_builder_additions 1.0.x-dev"
+   ```
+
+Use ```composer update drupal/layout_builder_additions --with-dependencies```
+to update to a new release.
+
+
+CONFIGURATION
+-------------
+
+The module has no menu or modifiable settings. There is no configuration. When
+enabled, the module will prevent the links from appearing. To get the links
+back, disable the module and clear caches.
+
+
+RECOMMENDED MODULES
+-------------------
 
 * [Layout Builder Modal](https://www.drupal.org/project/layout_builder_modal)
 * [Layout Builder Restrictions](https://www.drupal.org/project/layout_builder_restrictions)
 
-## Credits
 
-Currently maintained by [Rich Lawson](https://www.drupal.org/u/rklawson) and
-[Jason Thompson](https://www.drupal.org/u/galactus86) and sponsored by
-[Mediacurrent](https://www.mediacurrent.com).
+MAINTAINERS
+-----------
 
-## Contact Information
+* [Rich Lawson](https://www.drupal.org/u/rklawson) and
+* [Jason Thompson](https://www.drupal.org/u/galactus86)
 
-The best way to contact the authors is to submit an issue, be it a support
+Supporting organization:
+
+* [Mediacurrent](https://www.mediacurrent.com).
+
+
+CONTACT INFORMATION
+-------------------
+
+The best way to contact the maintainers is to submit an issue, be it a support
 request, a feature request or a bug report, in the project
 [issue queue](https://www.drupal.org/project/issues/layout_builder_additions).
