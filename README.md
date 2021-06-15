@@ -8,6 +8,7 @@ CONTENTS OF THIS FILE
  * Maintainers
  * Contact Information
 
+
 INTRODUCTION
 ------------
 
@@ -28,6 +29,12 @@ blocks.
 
   This module will work with both the core Layout Builder interface, as well as
   with the recommended Layout Builder Modal module (see below).
+
+* Adds a "Layout" entity operation.
+
+  Adds a "Layout" entity operation for content types that allow overridable
+  layouts. This is useful on the content admin screen to save extra steps/clicks
+  for editing layouts.
 
 
 REQUIREMENTS
@@ -72,12 +79,12 @@ RECOMMENDED MODULES
 MAINTAINERS
 -----------
 
-* [Rich Lawson](https://www.drupal.org/u/rklawson) and
+* [Rich Lawson](https://www.drupal.org/u/rklawson)
 * [Jason Thompson](https://www.drupal.org/u/galactus86)
 
 Supporting organization:
 
-* [Mediacurrent](https://www.mediacurrent.com).
+* [Mediacurrent](https://www.mediacurrent.com)
 
 
 CONTACT INFORMATION
