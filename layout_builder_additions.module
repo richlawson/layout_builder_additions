@@ -2,12 +2,40 @@
 
 /**
  * @file
- * The Layout Builder Additions module provides addditions for the core
- * Layout Builder module that improves the UI and experience.
+ * Provides additions for Layout Builder that improves the UI and experience.
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_entity_operation().
+ */
+function layout_builder_additions_entity_operation(EntityInterface $entity) {
+  $operations = [];
+  $entity_type_id = $entity->getEntityTypeId();
+
+  // Add 'Layout' operation for layout-enabled nodes with sufficient privileges.
+  if ($entity_type_id == 'node') {
+    $nid = $entity->id();
+    $user_current = \Drupal::currentUser();
+    $route_url = Url::fromRoute('layout_builder.overrides.node.view', ['node' => $nid]);
+
+    // Check current user for access to the override route for the node.
+    if ($route_url->access($user_current)) {
+      $operations['layout'] = [
+        'title' => t('Layout'),
+        'url' => $route_url,
+        'weight' => 50,
+      ];
+    }
+  }
+
+  return $operations;
+}
 
 /**
  * Implements hook_form_alter().
@@ -40,7 +68,7 @@ function layout_builder_additions_form_alter(&$form, FormStateInterface &$form_s
 /**
  * Implements hook_help().
  */
-function layout_builder_additions_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+function layout_builder_additions_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.layout_builder_additions':
       $text = file_get_contents(__DIR__ . '/README.md');
