@@ -1,0 +1,39 @@
+{
+  "name": "drupal/layout_builder_additions",
+  "description": "Provides additions for the core Layout Builder module that improves the UI and experience.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "homepage": "https://drupal.org/project/layout_builder_additions",
+  "authors": [
+    {
+      "name": "Rich Lawson (rklawson)",
+      "homepage": "https://www.drupal.org/u/rklawson",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Jason Thompson (galactus86)",
+      "homepage": "https://www.drupal.org/u/galactus86",
+      "role": "Co-maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/layout_builder_additions",
+    "source": "https://git.drupalcode.org/project/layout_builder_additions",
+    "docs": "https://www.drupal.org/project/layout_builder_additions"
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
+  },
+  "require": {
+    "drupal/core": "^8.8 || ^9"
+  },
+  "suggest": {
+    "drupal/layout_builder_modal": "Provides a modal in the Layout Builder UI for adding and configuring existing blocks."
+  }
+}
+
