@@ -1,0 +1,93 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Layout Builder Additions module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function layout_builder_additions_schema() {
+
+  $schema['layout_builder_additions_title_display_bundles'] = [
+    'description' => 'Saves configuration for title display for content types.',
+    'fields' => [
+      'bundle' => [
+        'description' => "The bundle label of this record.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+    ],
+  ];
+
+  $schema['layout_builder_additions_title_display_node'] = [
+    'description' => 'Saves node and title display association.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The parent nid this record affects.',
+        'type' => 'int',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'selected' => [
+        'description' => 'The selection for the title display.',
+        'type' => 'int',
+        'length' => 1,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function layout_builder_additions_install() {
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function layout_builder_additions_uninstall() {
+}
+
+/**
+ * Create database table for title display selection on nodes.
+ */
+function layout_builder_additions_update_8001() {
+  $spec = [
+    'description' => 'Saves node and title display association.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The parent nid this record affects.',
+        'type' => 'int',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'selected' => [
+        'description' => 'The selection for the title display.',
+        'type' => 'int',
+        'length' => 1,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ],
+    ],
+  ];
+
+  $schema = Database::getConnection()->schema();
+  $schema->createTable('layout_builder_additions_title_display_node', $spec);
+}
