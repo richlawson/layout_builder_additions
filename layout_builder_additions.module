@@ -5,6 +5,7 @@
  * Provides additions for Layout Builder that improves the UI and experience.
  */
 
+use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -38,9 +39,28 @@ function layout_builder_additions_entity_operation(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function layout_builder_additions_entity_type_alter(array &$entity_types) {
+  // TODO: Add support for specifying node bundles.
+  /*if ($entity_definition = $entity_types['node_type']) {
+    $entity_definition->setFormClass('add', 'Drupal\layout_builder)additions\Form\TitleDisplayNodeTypeForm');
+    $entity_definition->setFormClass('edit', 'Drupal\layout_builder_additions\Form\TitleDisplayNodeTypeForm');
+    $entity_definition->setFormClass('delete', 'Drupal\layout_builder_additions\Form\TitleDisplayNodeTypeDeleteConfirm');
+  }*/
+
+  if ($entity_definition = $entity_types['node']) {
+    $entity_definition->setFormClass('default', 'Drupal\layout_builder_additions\Form\LayoutBuilderAdditionsNodeForm');
+    $entity_definition->setFormClass('edit', 'Drupal\layout_builder_additions\Form\LayoutBuilderAdditionsNodeForm');
+  }
+}
+
+/**
  * Implements hook_form_alter().
  */
 function layout_builder_additions_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+
+  // Modify the block when adding or updating a block in Layout Builder.
   if ($form_id == 'layout_builder_add_block' || $form_id == 'layout_builder_update_block') {
     if (!empty($form['settings']['admin_label'])) {
       $form['settings']['admin_label']['#access'] = FALSE;
@@ -66,6 +86,18 @@ function layout_builder_additions_form_alter(&$form, FormStateInterface &$form_s
 }
 
 /**
+ * Implements hook_node_form_alter().
+ */
+function layout_builder_additions_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  // Set the weight of the the "Show Title" checkbox so it appears below the title.
+  if (isset($form['title'])) {
+    $form['layout_builder_additions_title_display']['#weight'] = $form['title']['#weight'] + 1;
+  } else {
+    $form['layout_builder_additions_title_display']['#access'] = FALSE;
+  }
+}
+
+/**
  * Implements hook_help().
  */
 function layout_builder_additions_help($route_name, RouteMatchInterface $route_match) {
@@ -85,4 +117,37 @@ function layout_builder_additions_help($route_name, RouteMatchInterface $route_m
       }
   }
   return NULL;
+}
+
+/**
+ * Implements hook_preprocess_page_title().
+ */
+function layout_builder_additions_preprocess_page_title(&$vars) {
+  // Retrieve node data.
+  $node = \Drupal::request()->attributes->get('node');
+
+  if ($node) {
+    // Initialize data to retrieve title display information.
+    $nid = (int) $node->nid;
+    $title_display = \Drupal::service('layout_builder_additions.title');
+    $node_association = $title_display->getNode($nid);
+
+    // Initialize variables to check for access.
+    $user_current = \Drupal::currentUser();
+    $route_url = Url::fromRoute('layout_builder.overrides.node.view', ['node' => $nid]);
+
+    // Check for current user to access layout overrides for this node bundle.
+    if ($route_url->access($user_current) && $node_association->selected == 0) {
+      if (isset($vars['title'])) {
+        $vars['title'] = new HtmlEscapedText('');
+      }
+      if (isset($vars['page']['#title'])) {
+        $vars['page']['#title'] = new HtmlEscapedText('');
+      }
+      if (isset($vars['node'])) {
+        $vars['node']->title = new HtmlEscapedText('');
+      }
+    }
+  }
+
 }
