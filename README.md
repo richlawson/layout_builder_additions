@@ -54,7 +54,7 @@ If your site is [managed via Composer](https://www.drupal.org/node/2718229), use
 Composer to download the module:
 
    ```sh
-   composer require "drupal/layout_builder_additions 1.0.x-dev"
+   composer drupal/layout_builder_additions
    ```
 
 Use ```composer update drupal/layout_builder_additions --with-dependencies```
