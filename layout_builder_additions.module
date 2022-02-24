@@ -42,16 +42,16 @@ function layout_builder_additions_entity_operation(EntityInterface $entity) {
  * Implements hook_entity_type_alter().
  */
 function layout_builder_additions_entity_type_alter(array &$entity_types) {
-  // TODO: Add support for specifying node bundles.
-  /*if ($entity_definition = $entity_types['node_type']) {
-    $entity_definition->setFormClass('add', 'Drupal\layout_builder)additions\Form\TitleDisplayNodeTypeForm');
-    $entity_definition->setFormClass('edit', 'Drupal\layout_builder_additions\Form\TitleDisplayNodeTypeForm');
-    $entity_definition->setFormClass('delete', 'Drupal\layout_builder_additions\Form\TitleDisplayNodeTypeDeleteConfirm');
-  }*/
 
+  // Node forms.
   if ($entity_definition = $entity_types['node']) {
     $entity_definition->setFormClass('default', 'Drupal\layout_builder_additions\Form\LayoutBuilderAdditionsNodeForm');
     $entity_definition->setFormClass('edit', 'Drupal\layout_builder_additions\Form\LayoutBuilderAdditionsNodeForm');
+  }
+
+  // Entity view display forms.
+  if ($entity_definition = $entity_types['entity_view_display']) {
+    $entity_definition->setFormClass('edit', 'Drupal\layout_builder_additions\Form\LayoutBuilderAdditionsEntityViewDisplayForm');
   }
 }
 
@@ -128,7 +128,7 @@ function layout_builder_additions_preprocess_page_title(&$vars) {
 
   if ($node) {
     // Initialize data to retrieve title display information.
-    $nid = (int) $node->nid;
+    $nid = (int) $node->nid->value;
     $title_display = \Drupal::service('layout_builder_additions.title');
     $node_association = $title_display->getNode($nid);
 

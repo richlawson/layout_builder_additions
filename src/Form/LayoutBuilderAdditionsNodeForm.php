@@ -10,8 +10,8 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\layout_builder_additions\Services\LayoutBuilderAdditionsTitleDisplay;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form handler for the node edit forms.
@@ -36,8 +36,10 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
 
   /**
    * Layout Builder Additions title display service.
+   *
+   * @var \Drupal\layout_builder_additions\Services\LayoutBuilderAdditionsTitleDisplay
    */
-  protected $title_display;
+  protected $titleDisplay;
 
   /**
    * Constructs a NodeForm object.
@@ -52,6 +54,10 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
    *   The time service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter interface.
+   * @param \Drupal\layout_builder_additions\Services\LayoutBuilderAdditionsTitleDisplay $title_display
+   *   The title display service.
    */
   public function __construct(EntityRepositoryInterface $entity_repository, PrivateTempStoreFactory $temp_store_factory, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, AccountInterface $current_user, DateFormatterInterface $date_formatter, LayoutBuilderAdditionsTitleDisplay $title_display) {
     parent::__construct($entity_repository, $temp_store_factory, $entity_type_bundle_info, $time, $current_user, $date_formatter);
@@ -66,13 +72,13 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-          $container->get('entity.repository'),
-          $container->get('tempstore.private'),
-          $container->get('entity_type.bundle.info'),
-          $container->get('datetime.time'),
-          $container->get('current_user'),
-          $container->get('date.formatter'),
-          $container->get('layout_builder_additions.title')
+        $container->get('entity.repository'),
+        $container->get('tempstore.private'),
+        $container->get('entity_type.bundle.info'),
+        $container->get('datetime.time'),
+        $container->get('current_user'),
+        $container->get('date.formatter'),
+        $container->get('layout_builder_additions.title')
       );
   }
 
@@ -118,10 +124,9 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
     // Get title display form state.
     $form_value = $form_state->getValue('layout_builder_additions_title_display');
 
-    // If the form value is not null ...
     if (!is_null($form_value)) {
       // Upsert title display selection.
-      $this->title_display->upsertTitleDisplayNodeSelection($node->id(), $form_value);
+      $this->title_display->upsertNodeRelationship($node->id(), $form_value);
     }
   }
 
