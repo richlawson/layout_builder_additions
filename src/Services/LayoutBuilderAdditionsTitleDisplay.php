@@ -38,8 +38,8 @@ class LayoutBuilderAdditionsTitleDisplay {
    *   Array containing title display node relation.
    */
   public function getNode($nid = NULL) {
-    $nodes = $this->connection->select('layout_builder_additions_title_display_node', 'titleon')
-      ->fields('titleon');
+    $nodes = $this->connection->select('layout_builder_additions_title_display_node', 'node')
+      ->fields('node');
 
     if (!is_null($nid)) {
       $nodes->condition('nid', $nid);
@@ -59,49 +59,45 @@ class LayoutBuilderAdditionsTitleDisplay {
   }
 
   /**
-   * Get title display bundles from the database.
+   * Check if this is a title display bundle in the database.
    *
    * @see Drupal\Core\Database\Connection::select()
    *
-   * @return array
-   *   Array containing title display bundle relation.
+   * @return boolean
+   *   Boolean value of whether or not the bundle exists.
    */
-  public function getBundle($bundle = NULL) {
-    $bundles = $this->connection->select('layout_builder_additions_title_display_bundle', 'bundle');
+  public function checkBundle($bundle = NULL) {
+    $bundles = $this->connection->select('layout_builder_additions_title_display_bundle', 'bundle')
+      ->fields('bundle');
 
     if (!is_null($bundle)) {
       $bundles->condition('bundle', $bundle);
     }
 
+    $bundle_exists = FALSE;
     $results = $bundles->execute();
-    $bundle = [];
     foreach ($results as $id => $result) {
-      if (is_array($results) && count($results) > 1) {
-        $saved_bundle_relation[$id] = $result;
-      }
-      else {
-        $saved_bundle_relation = $result;
+      if ($result->bundle == $bundle) {
+        $bundle_exists = TRUE;
       }
     }
-    return $saved_bundle_relation;
+    return $bundle_exists;
   }
 
   /**
    * Insert an entry into the database.
    *
    * @param string $bundle
-   *   Variable containing the bundle to add.
+   *   Variable containing the bundle machine name to add.
    *
    * @see \Drupal\Core\Database\Connection::insert()
    */
   public function insertBundle($bundle) {
-    $fields = [
-      'bundle' => $bundle,
-    ];
-
-    $insert = $this->connection->insert('layout_builder_additions_title_display_bundle');
-    $insert->fields(['bundle'], $fields);
-    return $insert->execute();
+    $this->connection->insert('layout_builder_additions_title_display_bundle')
+      ->fields([
+        'bundle' => $bundle,
+      ])
+      ->execute();
   }
 
   /**

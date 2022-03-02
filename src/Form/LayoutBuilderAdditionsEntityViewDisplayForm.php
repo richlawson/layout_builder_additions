@@ -65,12 +65,14 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
     $form = parent::form($form, $form_state);
 
     $entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
+    $bundle = $this->entity->getTargetBundle();
+
     $form['layout']['title_display'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable each @entity to have its title display customized.', [
         '@entity' => $entity_type->getSingularLabel(),
       ]),
-      '#default_value' => $this->entity->isOverridable(),
+      '#default_value' => $this->title_display->checkBundle($bundle),
       '#states' => [
         'disabled' => [
           [
@@ -97,12 +99,20 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $type = $this->entity;
-
-    $title_display = $form_state->getValue(['layout']['title_display']);
-    $value = $title_display['layout']['title_display'];
-
     parent::save($form, $form_state);
+
+    $bundle = $this->entity->getTargetBundle();
+
+    // Get title display form state.
+    $form_value = $form_state->getValue(['layout', 'title_display']);
+
+    if (!is_null($form_value) && $form_value !== 0) {
+      $this->title_display->insertBundle($bundle);
+    }
+    else {
+      $this->title_display->deleteBundle($bundle);
+    }
+
   }
 
 }
