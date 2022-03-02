@@ -13,7 +13,7 @@ use Drupal\Core\Database\Database;
  */
 function layout_builder_additions_schema() {
 
-  $schema['layout_builder_additions_title_display_bundles'] = [
+  $schema['layout_builder_additions_title_display_bundle'] = [
     'description' => 'Saves configuration for title display for content types.',
     'fields' => [
       'bundle' => [
@@ -66,7 +66,19 @@ function layout_builder_additions_uninstall() {
  * Create database table for title display selection on nodes.
  */
 function layout_builder_additions_update_8001() {
-  $spec = [
+  $bundle_spec = [
+    'description' => 'Saves configuration for title display for content types.',
+    'fields' => [
+      'bundle' => [
+        'description' => "The bundle label of this record.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+    ],
+  ];
+
+  $node_spec = [
     'description' => 'Saves node and title display association.',
     'fields' => [
       'nid' => [
@@ -89,5 +101,6 @@ function layout_builder_additions_update_8001() {
   ];
 
   $schema = Database::getConnection()->schema();
-  $schema->createTable('layout_builder_additions_title_display_node', $spec);
+  $schema->createTable('layout_builder_additions_title_display_bundle', $bundle_spec);
+  $schema->createTable('layout_builder_additions_title_display_node', $node_spec);
 }
