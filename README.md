@@ -1,19 +1,18 @@
 CONTENTS OF THIS FILE
 ---------------------
 
- * Introduction
- * Requirements
- * Installation
- * Configuration
- * Maintainers
- * Contact Information
-
+* Introduction
+* Requirements
+* Installation
+* Configuration
+* Maintainers
+* Contact Information
 
 INTRODUCTION
 ------------
 
-The Layout Builder Additions module provides additions for the core Layout 
-Builder module that improves the UI and experience. This module is currently 
+The Layout Builder Additions module provides additions for the core Layout
+Builder module that improves the UI and experience. This module is currently
 available for Drupal 8.7.7+ and 9.x.x.
 
 The primary features include:
@@ -36,18 +35,16 @@ blocks.
   layouts. This is useful on the content admin screen to save extra steps/clicks
   for editing layouts.
 
-
 REQUIREMENTS
 ------------
 
 This module requires the Layout Builder module in Drupal core.
 
-
 INSTALLATION
 ------------
 
-Install the Layout Builder Additions module as you would normally install a 
-contributed Drupal module. Follow Drupal's standard instructions for 
+Install the Layout Builder Additions module as you would normally install a
+contributed Drupal module. Follow Drupal's standard instructions for
 [installing modules](https://www.drupal.org/docs/extending-drupal/installing-modules).
 
 If your site is [managed via Composer](https://www.drupal.org/node/2718229), use
@@ -60,21 +57,19 @@ Composer to download the module:
 Use ```composer update drupal/layout_builder_additions --with-dependencies```
 to update to a new release.
 
-
 CONFIGURATION
 -------------
 
-The module has no menu or modifiable settings. There is no configuration. When
-enabled, the module will prevent the links from appearing. To get the links
-back, disable the module and clear caches.
+When a content type has the following *Manage display > Layout options* enabled, individual nodes will have a new "Layout" operation on the content admin screen:
 
+* Use Layout Builder
+* Allow each content item to have its layout customized.
 
 RECOMMENDED MODULES
 -------------------
 
 * [Layout Builder Modal](https://www.drupal.org/project/layout_builder_modal)
 * [Layout Builder Restrictions](https://www.drupal.org/project/layout_builder_restrictions)
-
 
 MAINTAINERS
 -----------
@@ -85,7 +80,6 @@ MAINTAINERS
 Supporting organization:
 
 * [Mediacurrent](https://www.mediacurrent.com)
-
 
 CONTACT INFORMATION
 -------------------
