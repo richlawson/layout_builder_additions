@@ -128,9 +128,12 @@ function layout_builder_additions_preprocess_page_title(&$vars) {
 
   if ($node) {
     // Initialize data to retrieve title display information.
+    $entity_type = $node->getEntityType()->id();
+    $bundle = $node->bundle();
     $nid = (int) $node->nid->value;
+    $revision_id = (int) $node->revision_id->value;
     $title_display = \Drupal::service('layout_builder_additions.title');
-    $node_association = $title_display->getNode($nid);
+    $node_association = $title_display->getEntity($entity_type, $bundle, $nid, $revision_id);
 
     // Initialize variables to check for access.
     $user_current = \Drupal::currentUser();

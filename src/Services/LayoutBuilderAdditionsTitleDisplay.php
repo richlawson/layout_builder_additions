@@ -27,48 +27,70 @@ class LayoutBuilderAdditionsTitleDisplay {
   }
 
   /**
-   * Get node and title display relation.
+   * Get entity and title display relationship.
    *
-   * @param int $nid
-   *   Variable containing node id.
+   * @param string $entity_type
+   *   Variable containing the entity type id machine name of the bundle.
+   * @param string $bundle
+   *   Variable containing the bundle machine name.
+   * @param int $entity_id
+   *   Variable containing the entity id.
+   * @param int $revision_id
+   *   Variable containing the revision id.
    *
    * @see Drupal\Core\Database\Connection::select()
    *
    * @return array
-   *   Array containing title display node relation.
+   *   Array containing title display and entity relationship.
    */
-  public function getNode($nid = NULL) {
-    $nodes = $this->connection->select('layout_builder_additions_title_display_node', 'node')
-      ->fields('node');
+  public function getEntity($entity_type = 'node', $bundle = 'node', $entity_id = NULL, $revision_id = NULL) {
+    $entities = $this->connection->select('layout_builder_additions_title_display_entity', 'entity')
+      ->condition('entity_type', $entity_type)
+      ->condition('bundle', $bundle)
+      ->fields('entity');
 
-    if (!is_null($nid)) {
-      $nodes->condition('nid', $nid);
+    if (!is_null($entity_id)) {
+      $entities->condition('entity_id', $entity_id);
     }
 
-    $results = $nodes->execute();
-    $saved_node_relation = [];
-    foreach ($results as $id => $result) {
+    if (!is_null($revision_id)) {
+      $entities->condition('revision_id', $revision_id);
+    }
+
+    $results = $entities->execute();
+
+    $saved_entity_relation = [];
+    foreach ($results as $entity_id => $result) {
       if (is_array($results) && count($results) > 1) {
-        $saved_node_relation[$id] = $result;
+        $saved_entity_relation[$entity_id] = $result;
       }
       else {
-        $saved_node_relation = $result;
+        $saved_entity_relation = $result;
       }
     }
-    return $saved_node_relation;
+    return $saved_entity_relation;
   }
 
   /**
    * Check if this is a title display bundle in the database.
    *
+   * @param string $entity_type
+   *   Variable containing the entity type machine name.
+   * @param string $bundle
+   *   Variable containing the bundle machine name.
+   *
    * @see Drupal\Core\Database\Connection::select()
    *
-   * @return boolean
+   * @return bool
    *   Boolean value of whether or not the bundle exists.
    */
-  public function checkBundle($bundle = NULL) {
+  public function checkBundle($entity_type = NULL, $bundle = NULL) {
     $bundles = $this->connection->select('layout_builder_additions_title_display_bundle', 'bundle')
       ->fields('bundle');
+
+    if (!is_null($entity_type)) {
+      $bundles->condition('entity_type', $entity_type);
+    }
 
     if (!is_null($bundle)) {
       $bundles->condition('bundle', $bundle);
@@ -76,7 +98,7 @@ class LayoutBuilderAdditionsTitleDisplay {
 
     $bundle_exists = FALSE;
     $results = $bundles->execute();
-    foreach ($results as $id => $result) {
+    foreach ($results as $entity_id => $result) {
       if ($result->bundle == $bundle) {
         $bundle_exists = TRUE;
       }
@@ -87,14 +109,18 @@ class LayoutBuilderAdditionsTitleDisplay {
   /**
    * Insert an entry into the database.
    *
+   * @param string $entity_type
+   *   Variable containing the entity type machine name.
    * @param string $bundle
-   *   Variable containing the bundle machine name to add.
+   *   Variable containing the bundle machine name.
    *
    * @see \Drupal\Core\Database\Connection::insert()
    */
-  public function insertBundle($bundle) {
+  public function insertBundle($entity_type = NULL, $bundle = NULL) {
+
     $this->connection->insert('layout_builder_additions_title_display_bundle')
       ->fields([
+        'entity_type' => $entity_type,
         'bundle' => $bundle,
       ])
       ->execute();
@@ -103,13 +129,16 @@ class LayoutBuilderAdditionsTitleDisplay {
   /**
    * Delete an entry from the database.
    *
+   * @param string $entity_type
+   *   Variable containing the entity type machine name.
    * @param string $bundle
-   *   A variable containing the bundle to delete.
+   *   Variable containing the bundle machine name.
    *
    * @see Drupal\Core\Database\Connection::delete()
    */
-  public function deleteBundle($bundle) {
+  public function deleteBundle($entity_type, $bundle) {
     $this->connection->delete('layout_builder_additions_title_display_bundle')
+      ->condition('entity_type', $entity_type)
       ->condition('bundle', $bundle)
       ->execute();
   }
@@ -117,20 +146,29 @@ class LayoutBuilderAdditionsTitleDisplay {
   /**
    * Insert an entry into the database.
    *
-   * @param int $nid
-   *   Variable containing node id.
+   * @param string $entity_type
+   *   Variable containing the entity type machine name.
+   * @param string $bundle
+   *   Variable containing the bundle machine name.
+   * @param int $entity_id
+   *   Variable containing the entity id.
+   * @param int $revision_id
+   *   Variable containing the revision id.
    * @param int $selected
-   *   Variable containing default itle display selection.
+   *   Variable containing default title display selection.
    *
    * @see Drupal\Core\Database\Connection::insert()
    *
    * @return int
-   *   Inserted nid.
+   *   Inserted entity id.
    */
-  public function insertNodeRelationship($nid, $selected) {
+  public function insertEntityRelationship($entity_type = 'node', $bundle = 'article', $entity_id = NULL, $revision_id = NULL, $selected = 1) {
 
     $fields = [
-      'nid' => (int) $nid,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'entity_id' => (int) $entity_id,
+      'revision_id' => (int) $revision_id,
     ];
 
     if ($selected) {
@@ -138,8 +176,14 @@ class LayoutBuilderAdditionsTitleDisplay {
       $fields['selected'] = (int) $selected;
     }
 
-    $insert = $this->connection->insert('layout_builder_additions_title_display_node');
-    $insert->fields(['nid', 'selected'], $fields);
+    $insert = $this->connection->insert('layout_builder_additions_title_display_entity');
+    $insert->fields([
+      'entity_type',
+      'bundle',
+      'entity_id',
+      'revision_id',
+      'selected',
+    ], $fields);
 
     return $insert->execute();
   }
@@ -147,35 +191,47 @@ class LayoutBuilderAdditionsTitleDisplay {
   /**
    * Insert an entry into the database.
    *
-   * @param int $nid
-   *   Variable containing node id.
+   * @param string $entity_type
+   *   Variable containing the entity type machine name.
+   * @param string $bundle
+   *   Variable containing the bundle machine name.
+   * @param int $entity_id
+   *   Variable containing the entity id.
+   * @param int $revision_id
+   *   Variable containing the revision id.
    * @param int $selected
    *   Variable containing default title display selection.
    *
    * @see Drupal\Core\Database\Connection::insert()
    *
    * @return int
-   *   Inserted nid.
+   *   Inserted entity id.
    */
-  public function upsertNodeRelationship($nid, $selected) {
+  public function upsertEntityRelationship($entity_type = 'node', $bundle = 'node', $entity_id = NULL, $revision_id = NULL, $selected = 1) {
 
     $fields = [
-      'nid' => (int) $nid,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'entity_id' => (int) $entity_id,
+      'revision_id' => (int) $revision_id,
     ];
 
     $selected = (bool) $selected;
     $fields['selected'] = (int) $selected;
 
-    $insert = $this->connection->merge('layout_builder_additions_title_display_node')
+    $insert = $this->connection->merge('layout_builder_additions_title_display_entity')
       ->insertFields($fields)
       ->updateFields(
         [
+          'revision_id' => (int) $revision_id,
           'selected' => $fields['selected'],
         ]
       )
       ->key(
               [
-                'nid' => $nid,
+                'entity_type' => $entity_type,
+                'bundle' => $bundle,
+                'entity_id' => $entity_id,
               ]
           );
 
@@ -185,14 +241,20 @@ class LayoutBuilderAdditionsTitleDisplay {
   /**
    * Delete an entry from the database.
    *
-   * @param int $nid
-   *   A variable containing the node ID of the entry to delete.
+   * @param string $entity_type
+   *   Variable containing the entity type machine name.
+   * @param string $bundle
+   *   Variable containing the bundle machine name.
+   * @param int $entity_id
+   *   A variable containing the entity id of the entry to delete.
    *
    * @see Drupal\Core\Database\Connection::delete()
    */
-  public function deleteNodeRelationship($nid) {
-    $this->connection->delete('layout_builder_additions_title_display_node')
-      ->condition('nid', $nid)
+  public function deleteEntityRelationship($entity_type = 'node', $bundle = 'node', $entity_id = NULL) {
+    $this->connection->delete('layout_builder_additions_title_display_entity')
+      ->condition('entity_type', $entity_type)
+      ->condition('bundle', $bundle)
+      ->condition('entity_id', $entity_id)
       ->execute();
   }
 

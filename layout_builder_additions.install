@@ -2,7 +2,6 @@
 
 use Drupal\Core\Database\Database;
 
-
 /**
  * @file
  * Install, update and uninstall functions for the Layout Builder Additions module.
@@ -14,10 +13,17 @@ use Drupal\Core\Database\Database;
 function layout_builder_additions_schema() {
 
   $schema['layout_builder_additions_title_display_bundle'] = [
-    'description' => 'Saves configuration for title display for content types.',
+    'description' => 'Stores configuration for title display for entity type bundles.',
     'fields' => [
+      'entity_type' => [
+        'description' => 'The entity type machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
       'bundle' => [
-        'description' => "The bundle label of this record.",
+        'description' => "The entity type bundle machine name.",
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -25,11 +31,32 @@ function layout_builder_additions_schema() {
     ],
   ];
 
-  $schema['layout_builder_additions_title_display_node'] = [
-    'description' => 'Saves node and title display association.',
+  $schema['layout_builder_additions_title_display_entity'] = [
+    'description' => 'Saves entity and title display relationship.',
     'fields' => [
-      'nid' => [
-        'description' => 'The parent nid this record affects.',
+      'entity_type' => [
+        'description' => 'The entity type machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'bundle' => [
+        'description' => "The entity type bundle machine name.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'entity_id' => [
+        'description' => 'The parent entity id this record affects.',
+        'type' => 'int',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'revision_id' => [
+        'description' => 'The parent revision id this record affects.',
         'type' => 'int',
         'length' => 11,
         'unsigned' => TRUE,
@@ -67,10 +94,17 @@ function layout_builder_additions_uninstall() {
  */
 function layout_builder_additions_update_8001() {
   $bundle_spec = [
-    'description' => 'Saves configuration for title display for content types.',
+    'description' => 'Stores configuration for title display for entity type bundles.',
     'fields' => [
+      'entity_type' => [
+        'description' => 'The entity type machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
       'bundle' => [
-        'description' => "The bundle label of this record.",
+        'description' => "The entity type bundle machine name.",
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -78,11 +112,32 @@ function layout_builder_additions_update_8001() {
     ],
   ];
 
-  $node_spec = [
-    'description' => 'Saves node and title display association.',
+  $entity_spec = [
+    'description' => 'Saves entity and title display relationship.',
     'fields' => [
-      'nid' => [
-        'description' => 'The parent nid this record affects.',
+      'entity_type' => [
+        'description' => 'The entity type machine name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'bundle' => [
+        'description' => "The entity type bundle machine name.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'entity_id' => [
+        'description' => 'The parent entity id this record affects.',
+        'type' => 'int',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'revision_id' => [
+        'description' => 'The parent revision id this record affects.',
         'type' => 'int',
         'length' => 11,
         'unsigned' => TRUE,
@@ -102,5 +157,5 @@ function layout_builder_additions_update_8001() {
 
   $schema = Database::getConnection()->schema();
   $schema->createTable('layout_builder_additions_title_display_bundle', $bundle_spec);
-  $schema->createTable('layout_builder_additions_title_display_node', $node_spec);
+  $schema->createTable('layout_builder_additions_title_display_entity', $entity_spec);
 }
