@@ -137,7 +137,7 @@ function layout_builder_additions_preprocess_page_title(&$vars) {
     $route_url = Url::fromRoute('layout_builder.overrides.node.view', ['node' => $nid]);
 
     // Check for current user to access layout overrides for this node bundle.
-    if ($route_url->access($user_current) && $node_association->selected == 0) {
+    if ($route_url->access($user_current) && isset($node_association->selected) && $node_association->selected == 0) {
       if (isset($vars['title'])) {
         $vars['title'] = new HtmlEscapedText('');
       }
