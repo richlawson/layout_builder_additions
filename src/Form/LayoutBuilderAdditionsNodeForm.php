@@ -89,10 +89,11 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
     $node = $this->entity;
 
     // TODO: Check bundle to see if this functionality applies.
-    // $type = $node->getType();
+    $entity_type = $node->getEntityType()->id();
+    $bundle = $node->bundle();
 
     // Get the node if it has bundle association.
-    $node_association = $this->title_display->getNode($node->id());
+    $node_association = $this->title_display->getEntity($entity_type, $bundle, $node->id(), $node->getRevisionId());
 
     // Check if this node is already related to title display selection.
     if (isset($node_association->selected) && $node_association->selected == 0) {
@@ -120,13 +121,15 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
 
     // Get node entry.
     $node = $this->entity;
+    $entity_type = $node->getEntityType()->id();
+    $bundle = $node->bundle();
 
     // Get title display form state.
     $form_value = $form_state->getValue('layout_builder_additions_title_display');
 
     if (!is_null($form_value)) {
       // Upsert title display selection.
-      $this->title_display->upsertNodeRelationship($node->id(), $form_value);
+      $this->title_display->upsertEntityRelationship($entity_type, $bundle, $node->id(), $node->getRevisionId(), $form_value);
     }
   }
 

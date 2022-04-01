@@ -72,7 +72,7 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
       '#title' => $this->t('Enable each @entity to have its title display customized.', [
         '@entity' => $entity_type->getSingularLabel(),
       ]),
-      '#default_value' => $this->title_display->checkBundle($bundle),
+      '#default_value' => $this->title_display->checkBundle($entity_type->get('id'), $bundle),
       '#states' => [
         'disabled' => [
           [
@@ -101,16 +101,17 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
 
+    $entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
     $bundle = $this->entity->getTargetBundle();
 
     // Get title display form state.
     $form_value = $form_state->getValue(['layout', 'title_display']);
 
     if (!is_null($form_value) && $form_value !== 0) {
-      $this->title_display->insertBundle($bundle);
+      $this->title_display->insertBundle($entity_type->get('id'), $bundle);
     }
     else {
-      $this->title_display->deleteBundle($bundle);
+      $this->title_display->deleteBundle($entity_type->get('id'), $bundle);
     }
 
   }
