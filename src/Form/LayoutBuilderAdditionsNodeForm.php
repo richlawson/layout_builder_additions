@@ -88,27 +88,29 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
   public function form(array $form, FormStateInterface $form_state) {
     $node = $this->entity;
 
-    // TODO: Check bundle to see if this functionality applies.
+    // Initialize variables.
     $entity_type = $node->getEntityType()->id();
     $bundle = $node->bundle();
 
-    // Get the node if it has bundle association.
-    $node_association = $this->title_display->getEntity($entity_type, $bundle, $node->id(), $node->getRevisionId());
+    // Check if node bundle is enabled to customize the title display.
+    if ($this->title_display->checkBundle($entity_type, $bundle)) {
+      // Retrieve the title display settings for the individual node.
+      $node_association = $this->title_display->getEntity($entity_type, $bundle, $node->id(), $node->getRevisionId());
 
-    // Check if this node is already related to title display selection.
-    if (isset($node_association->selected) && $node_association->selected == 0) {
-      // If node is associated to title display selection, get selected state.
-      $value = (bool) $node_association->selected;
-    }
-    else {
-      $value = (bool) TRUE;
-    }
+      // Check if this node is already related to title display selection.
+      if (isset($node_association->selected) && $node_association->selected == 0) {
+        // If node is associated to title display selection, get selected state.
+        $value = (bool) $node_association->selected;
+      } else {
+        $value = (bool) TRUE;
+      }
 
-    $form['layout_builder_additions_title_display'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Show title'),
-      '#default_value' => $value,
-    ];
+      $form['layout_builder_additions_title_display'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Show title'),
+        '#default_value' => $value,
+      ];
+    }
 
     return parent::form($form, $form_state);
   }

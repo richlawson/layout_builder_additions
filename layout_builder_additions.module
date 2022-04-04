@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\layout_builder_additions\Services\LayoutBuilderAdditionsTitleDisplay;
 
 /**
  * Implements hook_entity_operation().
@@ -127,30 +128,30 @@ function layout_builder_additions_preprocess_page_title(&$vars) {
   $node = \Drupal::request()->attributes->get('node');
 
   if ($node) {
-    // Initialize data to retrieve title display information.
+    // Check to see if this node bundle supports customized title displays.
     $entity_type = $node->getEntityType()->id();
     $bundle = $node->bundle();
-    $nid = (int) $node->nid->value;
-    $revision_id = (int) $node->revision_id->value;
     $title_display = \Drupal::service('layout_builder_additions.title');
-    $node_association = $title_display->getEntity($entity_type, $bundle, $nid, $revision_id);
 
-    // Initialize variables to check for access.
-    $user_current = \Drupal::currentUser();
-    $route_url = Url::fromRoute('layout_builder.overrides.node.view', ['node' => $nid]);
+    if ($title_display->checkBundle($entity_type, $bundle)) {
 
-    // Check for current user to access layout overrides for this node bundle.
-    if ($route_url->access($user_current) && isset($node_association->selected) && $node_association->selected == 0) {
-      if (isset($vars['title'])) {
-        $vars['title'] = new HtmlEscapedText('');
-      }
-      if (isset($vars['page']['#title'])) {
-        $vars['page']['#title'] = new HtmlEscapedText('');
-      }
-      if (isset($vars['node'])) {
-        $vars['node']->title = new HtmlEscapedText('');
+      // Node-specific variables.
+      $nid = (int) $node->nid->value;
+      $revision_id = (int) $node->vid->value;
+      $node_association = $title_display->getEntity($entity_type, $bundle, $nid, $revision_id);
+
+      // Check node title display association.
+      if (isset($node_association->selected) && $node_association->selected == 0) {
+        if (isset($vars['title'])) {
+          $vars['title'] = new HtmlEscapedText('');
+        }
+        if (isset($vars['page']['#title'])) {
+          $vars['page']['#title'] = new HtmlEscapedText('');
+        }
+        if (isset($vars['node'])) {
+          $vars['node']->title = new HtmlEscapedText('');
+        }
       }
     }
   }
-
 }
