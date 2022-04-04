@@ -60,13 +60,8 @@ class LayoutBuilderAdditionsTitleDisplay {
     $results = $entities->execute();
 
     $saved_entity_relation = [];
-    foreach ($results as $entity_id => $result) {
-      if (is_array($results) && count($results) > 1) {
-        $saved_entity_relation[$entity_id] = $result;
-      }
-      else {
-        $saved_entity_relation = $result;
-      }
+    foreach ($results as $revision_id => $result) {
+      $saved_entity_relation = $result;
     }
     return $saved_entity_relation;
   }
