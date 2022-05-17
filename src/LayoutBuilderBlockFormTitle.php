@@ -95,7 +95,9 @@ class LayoutBuilderBlockFormTitle {
       }
 
       return $this->t('Configure block: %label', ['%label' => $label]);
+    } else {
+      // This should not be a valid case.
+      return $this->t('Configure block');
     }
   }
-
 }
