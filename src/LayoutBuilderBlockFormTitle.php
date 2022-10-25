@@ -2,14 +2,44 @@
 
 namespace Drupal\layout_builder_additions;
 
+use Drupal\Core\Block\BlockManagerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple class to set the title on Layout Builder block forms.
  */
-class LayoutBuilderBlockFormTitle {
+class LayoutBuilderBlockFormTitle implements ContainerInjectionInterface {
+
   use StringTranslationTrait;
+
+  /**
+   * The block manager.
+   *
+   * @var \Drupal\Core\Block\BlockManagerInterface
+   */
+  protected $blockManager;
+
+  /**
+   * Constructs a LayoutBuilderBlockFormTitle instance.
+   *
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   *   The block manager.
+   */
+  public function __construct(BlockManagerInterface $block_manager) {
+    $this->blockManager = $block_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.block')
+    );
+  }
 
   /**
    * Set the title for a Layout Builder Add Block form.
@@ -81,6 +111,13 @@ class LayoutBuilderBlockFormTitle {
    *   The full label of the block type extracted from the plugin ID.
    */
   protected function getLabelFromPluginId($plugin_id) {
+    if ($plugin_block = $this->blockManager->createInstance($plugin_id, [])) {
+      $definition = $plugin_block->getPluginDefinition();
+      if (!empty($definition['admin_label'])) {
+        return $this->t('Configure block: %label', ['%label' => $definition['admin_label']]);
+      }
+    }
+
     $bundle = str_replace('inline_block:', '', $plugin_id);
     if (!empty($bundle)) {
       // Default to the bundle name.
