@@ -40,8 +40,8 @@ class LayoutBuilderAdditionsTitleDisplay {
    *
    * @see Drupal\Core\Database\Connection::select()
    *
-   * @return array
-   *   Array containing title display and entity relationship.
+   * @return object
+   *   Object containing title display and entity relationship.
    */
   public function getEntity($entity_type = 'node', $bundle = 'node', $entity_id = NULL, $revision_id = NULL) {
     $entities = $this->connection->select('layout_builder_additions_title_display_entity', 'entity')
