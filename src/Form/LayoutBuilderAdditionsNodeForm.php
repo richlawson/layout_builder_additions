@@ -64,7 +64,7 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
     $this->tempStoreFactory = $temp_store_factory;
     $this->currentUser = $current_user;
     $this->dateFormatter = $date_formatter;
-    $this->title_display = $title_display;
+    $this->titleDisplay = $title_display;
   }
 
   /**
@@ -93,15 +93,16 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
     $bundle = $node->bundle();
 
     // Check if node bundle is enabled to customize the title display.
-    if ($this->title_display->checkBundle($entity_type, $bundle)) {
+    if ($this->titleDisplay->checkBundle($entity_type, $bundle)) {
       // Retrieve the title display settings for the individual node.
-      $node_association = $this->title_display->getEntity($entity_type, $bundle, $node->id(), $node->getRevisionId());
+      $node_association = $this->titleDisplay->getEntity($entity_type, $bundle, $node->id(), $node->getRevisionId());
 
       // Check if this node is already related to title display selection.
       if (isset($node_association->selected) && $node_association->selected == 0) {
         // If node is associated to title display selection, get selected state.
         $value = (bool) $node_association->selected;
-      } else {
+      }
+      else {
         $value = (bool) TRUE;
       }
 
@@ -131,7 +132,7 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
 
     if (!is_null($form_value)) {
       // Upsert title display selection.
-      $this->title_display->upsertEntityRelationship($entity_type, $bundle, $node->id(), $node->getRevisionId(), $form_value);
+      $this->titleDisplay->upsertEntityRelationship($entity_type, $bundle, $node->id(), $node->getRevisionId(), $form_value);
     }
   }
 

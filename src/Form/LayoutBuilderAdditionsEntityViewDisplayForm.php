@@ -42,7 +42,7 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
    */
   public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, LayoutBuilderAdditionsTitleDisplay $title_display) {
     parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager, $title_display);
-    $this->title_display = $title_display;
+    $this->titleDisplay = $title_display;
   }
 
   /**
@@ -72,22 +72,18 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
       '#title' => $this->t('Enable each @entity to have its title display customized.', [
         '@entity' => $entity_type->getSingularLabel(),
       ]),
-      '#default_value' => $this->title_display->checkBundle($entity_type->get('id'), $bundle),
+      '#default_value' => $this->titleDisplay->checkBundle($entity_type->get('id'), $bundle),
       '#states' => [
-        'disabled' => [
+        'visible' => [
           [
-            ':input[name="layout[enabled]"]' => ['checked' => FALSE],
-          ],
-          [
-            ':input[name="layout[allow_custom]"]' => ['checked' => FALSE],
+            ':input[name="layout[allow_custom]"]' => ['checked' => TRUE],
+            ':input[name="layout[enabled]"]' => ['checked' => TRUE],
           ],
         ],
-        'invisible' => [
+        'enabled' => [
           [
-            ':input[name="layout[enabled]"]' => ['checked' => FALSE],
-          ],
-          [
-            ':input[name="layout[allow_custom]"]' => ['checked' => FALSE],
+            ':input[name="layout[allow_custom]"]' => ['checked' => TRUE],
+            ':input[name="layout[enabled]"]' => ['checked' => TRUE],
           ],
         ],
       ],
@@ -108,10 +104,10 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
     $form_value = $form_state->getValue(['layout', 'title_display']);
 
     if (!is_null($form_value) && $form_value !== 0) {
-      $this->title_display->insertBundle($entity_type->get('id'), $bundle);
+      $this->titleDisplay->insertBundle($entity_type->get('id'), $bundle);
     }
     else {
-      $this->title_display->deleteBundle($entity_type->get('id'), $bundle);
+      $this->titleDisplay->deleteBundle($entity_type->get('id'), $bundle);
     }
 
   }
