@@ -4,8 +4,8 @@ namespace Drupal\layout_builder_additions;
 
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
