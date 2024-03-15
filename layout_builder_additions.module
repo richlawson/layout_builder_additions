@@ -90,7 +90,7 @@ function layout_builder_additions_form_alter(&$form, FormStateInterface &$form_s
  * Implements hook_node_form_alter().
  */
 function layout_builder_additions_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
-  // Set the weight of the the "Show Title" checkbox so it appears below the title.
+  // Set the weight of the the "Display Title" checkbox so it appears below the title.
   if (isset($form['title'])) {
     $form['layout_builder_additions_title_display']['#weight'] = $form['title']['#weight'] + 1;
   } else {
