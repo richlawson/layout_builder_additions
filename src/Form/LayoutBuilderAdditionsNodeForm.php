@@ -4,13 +4,13 @@ namespace Drupal\layout_builder_additions\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\node\NodeForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\layout_builder_additions\Services\LayoutBuilderAdditionsTitleDisplay;
+use Drupal\node\NodeForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -134,6 +134,7 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
       // Upsert title display selection.
       $this->titleDisplay->upsertEntityRelationship($entity_type, $bundle, $node->id(), $node->getRevisionId(), $form_value);
     }
+    return SAVED_UPDATED;
   }
 
 }

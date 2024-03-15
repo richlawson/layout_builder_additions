@@ -5,7 +5,9 @@ namespace Drupal\layout_builder_additions\Services;
 use Drupal\Core\Database\Connection;
 
 /**
+ * Entity handling for Layout Builder Additions title display options.
  *
+ * @internal
  */
 class LayoutBuilderAdditionsTitleDisplay {
 

@@ -3,9 +3,9 @@
 namespace Drupal\layout_builder_additions\Form;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\layout_builder_additions\Services\LayoutBuilderAdditionsTitleDisplay;
@@ -41,7 +41,7 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
    *   The title display service.
    */
   public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, LayoutBuilderAdditionsTitleDisplay $title_display) {
-    parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager, $title_display);
+    parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager);
     $this->titleDisplay = $title_display;
   }
 
@@ -105,11 +105,12 @@ class LayoutBuilderAdditionsEntityViewDisplayForm extends LayoutBuilderEntityVie
 
     if (!is_null($form_value) && $form_value !== 0) {
       $this->titleDisplay->insertBundle($entity_type->get('id'), $bundle);
+      return SAVED_UPDATED;
     }
     else {
       $this->titleDisplay->deleteBundle($entity_type->get('id'), $bundle);
+      return SAVED_DELETED;
     }
-
   }
 
 }
