@@ -108,7 +108,7 @@ class LayoutBuilderAdditionsNodeForm extends NodeForm {
 
       $form['layout_builder_additions_title_display'] = [
         '#type' => 'checkbox',
-        '#title' => t('Show title'),
+        '#title' => t('Display title'),
         '#default_value' => $value,
       ];
     }
