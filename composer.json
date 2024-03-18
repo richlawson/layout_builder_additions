@@ -30,10 +30,9 @@
     }
   },
   "require": {
-    "drupal/core": "^8.8 || ^9 || ^10"
+    "drupal/core": "^8.8 || ^9 || ^10 || ^11"
   },
   "suggest": {
     "drupal/layout_builder_modal": "Provides a modal in the Layout Builder UI for adding and configuring existing blocks."
   }
 }
-
