@@ -1,0 +1,18 @@
+# Drupal components, module names and programming terms
+blocktype
+mediatype
+nodetype
+taxonomyterm
+ctools
+phplint
+csslint
+interdif
+nomsg
+nolog
+drupalspoons
+backported
+tnid
+randomstring
+
+# Layout Builder Additions words
+Mediacurrent
