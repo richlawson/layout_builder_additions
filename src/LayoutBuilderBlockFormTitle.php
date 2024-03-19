@@ -4,6 +4,7 @@ namespace Drupal\layout_builder_additions;
 
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,13 +24,23 @@ class LayoutBuilderBlockFormTitle implements ContainerInjectionInterface {
   protected $blockManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a LayoutBuilderBlockFormTitle instance.
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(BlockManagerInterface $block_manager) {
+  public function __construct(BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->blockManager = $block_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -37,7 +48,8 @@ class LayoutBuilderBlockFormTitle implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -124,7 +136,7 @@ class LayoutBuilderBlockFormTitle implements ContainerInjectionInterface {
       $label = $bundle;
 
       // Try to load the block bundle's full label.
-      $bundle_entity = \Drupal::entityTypeManager()
+      $bundle_entity = $this->entityTypeManager
         ->getStorage('block_content_type')
         ->load($bundle);
       if (!empty($bundle_entity)) {
